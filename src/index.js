@@ -82,7 +82,6 @@ function FinishButton(){
   return (
     <div className={classes.root}>
       <Button variant="contained" color="primary" id ="FinishButton" onClick={() => { 
-  
         let output ='You do not need to get tested';
         results.forEach((input)=>{
           if(input===true){

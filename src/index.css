@@ -1,3 +1,22 @@
+h1 {
+  font-size: 2.8em;
+  font-weight: bold;
+  color:  rgb(0,0,0);
+  text-align: center;
+}
+
+h2 {
+  font-size: 2.0em;
+  font-weight: bold;
+  color:  rgb(233, 24, 24);
+  text-align: center;
+}
+
+/* button.FinishButton {
+  margin-left: 85%;
+  margin-top:95%;
+} */
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
