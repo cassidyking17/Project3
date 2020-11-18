@@ -10,7 +10,7 @@ import './index.css';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-const results = [];
+let results = []; 
 
 function Labels(props) {
   return <h2>{props.title}</h2>;
@@ -75,21 +75,21 @@ function DropDownMenus() {
     </div>
   );
 }
+
 function FinishButton(){
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Button variant="contained" color="primary" id ="FinishButton" onClick={() => { 
-        let output ='';
+        let output ='You do not need to get tested';
         results.forEach((input)=>{
           if(input===true){
             output='You should get tested';
-          }else{
-            output='You do not need to get tested';
           }
         }) 
         alert(output);
+        results =[];
       }}>
         Finish
       </Button>
