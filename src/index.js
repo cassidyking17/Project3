@@ -6,6 +6,11 @@ import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import './index.css';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+let results = []; 
 
 function Labels(props) {
   return <h2>{props.title}</h2>;
@@ -24,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
   },
   root: {
+    flexGrow: 1,
     '& > *': {
       margin: theme.spacing(1),
     },
@@ -37,6 +43,7 @@ function DropDownMenus() {
 
   const handleChange = (event) => {
     setSick(event.target.value);
+    results.push(event.target.value);
   };
   const handleClose = () => {
     setOpen(false);
@@ -68,23 +75,43 @@ function DropDownMenus() {
     </div>
   );
 }
+
 function FinishButton(){
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Button variant="contained" color="primary">
-        Finish
-      </Button>
+      <Button variant="contained" color="primary" id ="FinishButton" onClick={() => { 
+  
+        let output ='You do not need to get tested';
+        results.forEach((input)=>{
+          if(input===true){
+            output='You should get tested';
+          }
+        }) 
+        alert(output);
+        results =[];
+      }}>
+        Finish
+      </Button>
     </div>
   )
 }
 export default function App(){
+  const classes = useStyles();
   return(
-    <div>
-      <h1>Should you get tested for COVID?</h1>
-      <Labels title ="Do you have any of the following symptoms?"/>
-      <Symptoms symptom = "Fever of above 100 degrees or chills:"/>
+    <div>  
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          <h1>Should you get tested for COVID?</h1>
+          <h2>Do you have any of the following symptoms?</h2> 
+          </Paper>
+        </Grid>
+     
+        <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper}>
+          <Symptoms symptom = "Fever of above 100 degrees or chills:"/>
       <DropDownMenus></DropDownMenus>
       <Symptoms symptom ="Shortness of breath:" />
       <DropDownMenus></DropDownMenus>
@@ -92,7 +119,12 @@ export default function App(){
       <DropDownMenus></DropDownMenus>
       <Symptoms symptom ="Body aches:" />
       <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Loss of taste or smell:" />
+      </Paper>
+        </Grid>
+      
+        <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper}>
+        <Symptoms symptom ="Loss of taste or smell:" />
       <DropDownMenus></DropDownMenus>
       <Symptoms symptom ="Conjestion/runny nose:" />
       <DropDownMenus></DropDownMenus>
@@ -100,7 +132,22 @@ export default function App(){
       <DropDownMenus></DropDownMenus>
       <Symptoms symptom ="Diarrhea:" />
       <DropDownMenus></DropDownMenus>
-      <FinishButton></FinishButton>
+      
+      </Paper>
+        </Grid>
+        </Grid>
+
+        <Grid item xs={6} sm={3}>
+        <Grid item xs={6} sm={3}>
+        <Grid item xs={6} sm={3}>
+       
+        <Grid item xs={6} sm={3}>
+        <FinishButton> </FinishButton>
+        </Grid>
+        </Grid>
+        </Grid>
+        </Grid>
+       
     </div>
   )
 }
