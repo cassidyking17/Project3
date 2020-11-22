@@ -7,34 +7,64 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import './index.css';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
-let results = []; 
-
-function Labels(props) {
-  return <h2>{props.title}</h2>;
-}
-function Symptoms(props) {
-  return <h3>{props.symptom}</h3>;
-}
 
 const useStyles = makeStyles((theme) => ({
   button: {
     display: 'block',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
   root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    minWidth: 300,
+    width: '100%',
     flexGrow: 1,
     '& > *': {
       margin: theme.spacing(1),
     },
   },
 }));
+
+let info={};
+
+var request = new XMLHttpRequest();
+  request.open("GET", "https://api.covidtracking.com/v1/us/current.json",true );
+  request.onload = function() {
+    const data = JSON.parse(this.response)[0];
+     info ={
+      "Total Positive Cases:": data.positive,
+      "Currently Hospitalized:": data.hospitalizedCurrently,
+      "Total Recovered:":data.death,
+      "Total Deaths:":data.death,
+      "Total Test Results Given:": data.totalTestResults
+    } 
+
+    function renderKeys(){
+      const keys = Object.keys(info);
+      return keys.map((key)=><h3>{key}</h3>)
+    }
+    function renderValues(){
+      const values = Object.values(info);
+      return values.map((value)=><h3>{value}</h3>)
+    }
+    ReactDOM.render(renderKeys(),document.getElementById('dashKeys'))
+    ReactDOM.render(renderValues(),document.getElementById('dashValues'))
+}  
+
+let results = []; 
+let output='You do not need to get tested';
+
+function Symptoms(props) {
+  return <h3>{props.symptom}</h3>;
+}
+function Test(props){
+  return <h4>{props.test}</h4>
+}
 
 function DropDownMenus() {
   const classes = useStyles();
@@ -78,79 +108,82 @@ function DropDownMenus() {
 
 function FinishButton(){
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
-      <Button variant="contained" color="primary" id ="FinishButton" onClick={() => { 
-        let output ='You do not need to get tested';
+      <Button variant="contained" color="secondary" id ="FinishButton" onClick={() => { 
+        output ='You do not need to get tested';
         results.forEach((input)=>{
           if(input===true){
             output='You should get tested';
           }
         }) 
-        alert(output);
+        ReactDOM.render(
+          output,document.getElementById('text')
+        );
         results =[];
       }}>
         Finish
       </Button>
+  
     </div>
   )
 }
+
+
 export default function App(){
   const classes = useStyles();
   return(
     <div>  
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
+      <Grid container spacing={1}>
+        <Grid item xs={12} sm={6}>
+          
           <h1>Should you get tested for COVID?</h1>
           <h2>Do you have any of the following symptoms?</h2> 
-          </Paper>
+          
         </Grid>
-     
-        <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper}>
-          <Symptoms symptom = "Fever of above 100 degrees or chills:"/>
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Shortness of breath:" />
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Fatigue:" />
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Body aches:" />
-      <DropDownMenus></DropDownMenus>
-      </Paper>
-        </Grid>
-      
-        <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper}>
-        <Symptoms symptom ="Loss of taste or smell:" />
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Conjestion/runny nose:" />
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Nausea/vomitting:" />
-      <DropDownMenus></DropDownMenus>
-      <Symptoms symptom ="Diarrhea:" />
-      <DropDownMenus></DropDownMenus>
-      
-      </Paper>
-        </Grid>
-        </Grid>
+      <Grid item xs={12} sm={6}> 
+        <h1>
+          COVID Dashboard:
+        </h1>
+        <h2 id ='facts'>Facts:</h2> 
 
-        <Grid item xs={6} sm={3}>
-        <Grid item xs={6} sm={3}>
-        <Grid item xs={6} sm={3}>
-       
-        <Grid item xs={6} sm={3}>
-        <FinishButton> </FinishButton>
         </Grid>
-        </Grid>
-        </Grid>
-        </Grid>
-       
-    </div>
+      
+      <Grid item xs={6} sm={3}>
+        <Symptoms symptom = "Fever of above 100 degrees or chills:"/>
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Shortness of breath:" />
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Fatigue:" />
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Body aches:" />
+        <DropDownMenus></DropDownMenus>
+      </Grid>
+      
+      <Grid item xs={6} sm={3}>
+        <Symptoms symptom ="Loss of taste or smell:" />
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Conjestion/runny nose:" />
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Nausea/vomitting:" />
+        <DropDownMenus></DropDownMenus>
+        <Symptoms symptom ="Diarrhea:" />
+        <DropDownMenus></DropDownMenus>
+      </Grid>
+      <Grid item xs={12} sm={3} id = 'dashKeys'/>
+      <Grid item xs={12} sm={3} id = 'dashValues'/>
+      </Grid>
+
+        
+      <Grid item xs={12} sm={6}>
+      <FinishButton> </FinishButton>
+        <h3 id="text">Results Shown Here</h3>
+      </Grid>
+   </div>
   )
 }
 
+request.send();
 ReactDOM.render(
   <App />,
   document.getElementById('root')
