@@ -9,6 +9,9 @@ import Button from '@material-ui/core/Button';
 import './index.css';
 import Grid from '@material-ui/core/Grid';
 
+  document.body.style.background = "lightgrey";
+
+
 const useStyles = makeStyles((theme) => ({
   button: {
     display: 'block',
@@ -36,10 +39,11 @@ var request = new XMLHttpRequest();
   request.open("GET", "https://api.covidtracking.com/v1/us/current.json",true );
   request.onload = function() {
     const data = JSON.parse(this.response)[0];
-     info ={
+    
+    info ={
       "Total Positive Cases:": data.positive,
       "Currently Hospitalized:": data.hospitalizedCurrently,
-      "Total Recovered:":data.death,
+      "Total Recovered:":data.recovered,
       "Total Deaths:":data.death,
       "Total Test Results Given:": data.totalTestResults
     } 
@@ -137,7 +141,7 @@ export default function App(){
       <Grid container spacing={1}>
         <Grid item xs={12} sm={6}>
           
-          <h1>Should you get tested for COVID?</h1>
+          <h1>COVID Symptom Test</h1>
           <h2>Do you have any of the following symptoms?</h2> 
           
         </Grid>
